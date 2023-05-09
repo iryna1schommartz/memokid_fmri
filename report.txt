@@ -1,0 +1,9 @@
+1. SPM 12: glm_rsa.m and wrapper_glm.m.    run first-level GLM
+2. SPM 8 : glm_lss.m and wrapper_lss.m 
+3. wrapper_mask.sh   Registration
+4. convert_lss_betas.m Create nni is lss/betas
+5. gunzip_lss_beta.m
+6. rsa_manual.m; rsa_launcher_run.m; rsa_aggregate_manual.m RUN RSA
+7. compute_indices_scene-specific.m 
+8. compute_indices_subcategorical.m 
+
