@@ -148,14 +148,15 @@ for c_roi = 1:use_rois
             fix_ind = startsWith(beta_info_run.betaname, 'fix');
 
             % Slice the RDM
-            rdm = rdm_run(fix_ind,fix_ind);
+            rdm1 = rdm_run(fix_ind,fix_ind);
+            rdm = 1 - rdm1;
 
             % Compute averages across categories. I will store it into a
             % structure with all scene_stage values
-            fix.subcat.run(c_run,1) = mean(atanh(mean(rdm(selector==3))));
-            fix.subcat.run(c_run,2) = mean(atanh(mean(rdm(selector==1))));
-            fix.subcat.run(c_run,3) = mean(atanh(mean(rdm(selector==2))));
-            fix.subcat.run(c_run,4) = mean(atanh(mean(rdm(selector==0))));
+            fix.subcat.run(c_run,1) = mean(atanh(rdm(selector==3)));
+            fix.subcat.run(c_run,2) = mean(atanh(rdm(selector==1)));
+            fix.subcat.run(c_run,3) = mean(atanh(rdm(selector==2)));
+            fix.subcat.run(c_run,4) = mean(atanh(rdm(selector==0)));
 
             end
         end
@@ -170,8 +171,8 @@ for c_roi = 1:use_rois
         fix.subcat.between_rec(c_sub) = mean(fix.subcat.run(:,2));
         fix.subcat.within_rem(c_sub) = mean(fix.subcat.run(:,3));
         fix.subcat.between_rem(c_sub) = mean(fix.subcat.run(:,4));
-        fix.subcat.preact_rec(c_sub) = mean(fix.subcat.run(:,2) - fix.subcat.run(:,1));
-        fix.subcat.preact_rem(c_sub) = mean(fix.subcat.run(:,4) - fix.subcat.run(:,3));
+        fix.subcat.preact_rec(c_sub) = mean(fix.subcat.run(:,1) - fix.subcat.run(:,2));
+        fix.subcat.preact_rem(c_sub) = mean(fix.subcat.run(:,3) - fix.subcat.run(:,4));
 
 
     end
