@@ -1,7 +1,7 @@
 %% Computing dissimilarity indices for Memokid
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % Javier Ortiz-Tudela ortiztudela@psych.uni-frankfurt.com
-% adjusted and modified by Iryna Schommartz
+% adjusted and modified by Iryna Schommartz schommartz@psych.uni-frankfurt.com
 % LISCO Lab - Goethe Universitat
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -60,6 +60,8 @@ for c_sub = 1:n_subs
     % Load aggregated results
     'loading data...'
     load(rdms_file)
+    rdm_out = 1 - rdm_out; % Convert from dissimilarity to similarity
+    rdm_out = min (max (rdm_out, -.9999), .9999);
     %%
     % Loop through subjects
     d = 1;
@@ -142,12 +144,12 @@ for c_sub = 1:n_subs
             pred_per_set(this_trial) = [];
             pred_per_trial_set(c_trial) = nanmean(atanh(pred_per_set));
          
-            itemset(c_trial) =pred_per_trial_set(c_trial)-atanh(pred_per_trial(c_trial));
+            itemset(c_trial) =atahn(pred_per_trial(c_trial))- pred_per_trial_set(c_trial);
            
         end
         av_pred_run(c_run) = nanmean(atanh(pred_per_trial)); % mean across trials in each run separately
         av_pred_run_set(c_run) = nanmean(pred_per_trial_set); % mean across trials in this run
-        av_pred_run_itemset(c_run)=nanmean(itemset(c_trial));
+        av_pred_run_itemset(c_run)=nanmean(itemset); 
 
     end
    % keyboard
@@ -159,16 +161,16 @@ for c_sub = 1:n_subs
    
 end
 
-%
-mkdir('...')
-output_name = sprintf('%s/.../%s_ses-%02d_fixscene_rec_item.mat', main_folder, mask, ses_nbr);
-save(output_name, 'av_pred')
+% Create directory for outputs
+    out_dir = fullfile(main_folder, 'task_outputs', 'rsa_scripts', 'rsa_outputs_set_CH_fixscene_OriginalRatanh');
+    if ~exist(out_dir, 'dir'), mkdir(out_dir); end
 
-output_name1 = sprintf('%s/.../%s_ses-%02d_fixscene_rec_set.mat', main_folder, mask, ses_nbr);
-save(output_name1, 'av_pred_set');
-
-output_name2 = sprintf('%s/.../%s_ses-%02d_fixscene_rec_setitem.mat', main_folder, mask, ses_nbr);
-save(output_name2, 'av_pred_itemset');
+    % Save output data
+    save(fullfile(out_dir, sprintf('%s_CH_ses-%02d_fixscene_rec_item.mat', mask, ses_nbr)), 'av_pred');
+    save(fullfile(out_dir, sprintf('%s_CH_ses-%02d_fixscene_rec_set.mat', mask, ses_nbr)), 'av_pred_set');
+    save(fullfile(out_dir, sprintf('%s_CH_ses-%02d_fixscene_rec_setitem.mat', mask, ses_nbr)), 'av_pred_itemset');
+    save(fullfile(out_dir, sprintf('%s_CH_ses-%02d_fixscene_rec_setitem_subjectlevel.mat', mask, ses_nbr)), 'av_pred_itemset_subjectlevel');
+end
 
 
 
